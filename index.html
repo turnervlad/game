@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>game2</title>
+	<link href="style.css" rel="stylesheet">
+</head>
+<body>
+<input id='in' type="text" name="">
+<button id="pause" onclick="paus()">Pause(P)</button>
+<button id="pause" onclick="res()">Restart(R)</button>
+<div id="field">
+<p>Для перехода в турбо режим нажмите shift</p>
+
+	<div class="rocket"><img style='top:64px; left:64px' id="rocket" src="img/rocket.png"></div>
+</div>
+	<script type="text/javascript">
+
+var field = document.getElementById('field');
+field.style.height=document.documentElement.clientHeight - 60 + 'px';
+field.style.width=document.documentElement.clientWidth - 60 + 'px';
+var rocket = document.getElementById('rocket');
+var inp = document.getElementById('in');
+inp.value = parseInt(field.style.width);
+		var speed = 15;
+		var position = -548;
+		var score = 0;
+		var pause = true;
+		var x=0, y=0;
+		var turbo = 4;
+		var shift = 4;
+//анимация фона
+
+var timer = setTimeout(function anyFon() {
+	if(pause){
+  		field.style.backgroundPositionY = position++ + 'px';
+  		field.style.backgroundPositionY = position++ + 'px';
+  		field.style.backgroundPositionY = position++ + 'px'; 
+  		if(position > -1)position= -548;
+  		inp.value ='score = ' + score;
+  	}
+  		timer = setTimeout(anyFon, speed);
+}, speed);
+
+
+//перемещение ракеты
+
+setInterval(function() {
+	if(turbo == 0)turbo = shift;
+	while(turbo){
+	
+		if(parseInt(rocket.style.top)!=y-64){
+			if(parseInt(rocket.style.top) > y-64){
+				if(parseInt(rocket.style.top)>30)
+				rocket.style.top = parseInt(rocket.style.top)-1 + 'px';
+			}else{
+				if(parseInt(rocket.style.top)+100<parseInt(field.style.height))
+				rocket.style.top = parseInt(rocket.style.top)+1 + 'px';
+			}
+		}
+	
+
+	if(parseInt(rocket.style.left)!= x-64){
+			if(parseInt(rocket.style.left) > x-64){
+				if(parseInt(rocket.style.left)> -22)
+				rocket.style.left = parseInt(rocket.style.left)-1 + 'px';
+			}else{
+			if(parseInt(rocket.style.left)+88<parseInt(field.style.width))
+				rocket.style.left = parseInt(rocket.style.left)+1 + 'px';
+			}
+		}
+	
+	turbo--;
+}
+},7);
+
+document.onmousemove = function(e) {
+	if(pause){
+		y = e.clientY;
+		x = e.clientX;
+		}	
+};
+
+//горячие клавиши
+document.body.onkeydown = function(e){
+	//if(e.shiftKey)shift = 8;
+	if(e.keyCode==32)shift = 8;
+	if(e.keyCode==80)paus();
+	if(e.keyCode==82)res();
+}
+document.body.onkeyup = function(e){
+	shift =4;
+}
+
+var img;
+
+//генерация монеток
+
+var coin={};
+var timer0 = setInterval(function() {
+if(pause){
+if(document.getElementsByTagName('img').length<6){
+img = document.createElement('img');
+img.src = "img/coin.png";
+img.coinTop = random(25,120);
+img.style.top = img.coinTop + 'px';
+img.coinLeft = random(64,parseInt(field.style.width) - 74);
+img.style.left = img.coinLeft + 'px';
+img.coinNumber = img.style.top+img.style.left;
+}
+coin[img.style.top+img.style.left]=img;
+document.body.appendChild(img);
+}
+},1000);
+
+//анимация монеток
+var timer2 = setTimeout(function anyCoin() {
+	if(pause){
+		for(var key in coin){
+			coin[key].style.top = coin[key].coinTop++ + 'px';
+			coin[key].style.top = coin[key].coinTop++ + 'px';
+			coin[key].style.top = coin[key].coinTop++ + 'px';
+			coin[key].style.top = coin[key].coinTop++ + 'px';	
+			if(coin[key].coinTop>parseInt(field.style.height)-68){
+				coin[key].remove();		
+				delete coin[key];
+				score--;
+			}else{
+			if(range(coin[key].coinLeft,coin[key].coinTop)){
+				coin[key].remove();		
+				delete coin[key];
+				score++;
+			}
+		}
+		}
+	}
+		timer2 = setTimeout(anyCoin, speed);
+	}, speed);
+
+function random(min, max) {
+  var rand = min + Math.random() * (max - min);
+  rand = Math.round(rand);
+  return rand;
+}
+
+//выход за рамки
+function range(valX,valY){
+	if(parseInt(rocket.style.left)+64>valX+64&&parseInt(rocket.style.left)+64<valX+128){
+		if(parseInt(rocket.style.top)+64>valY&&parseInt(rocket.style.top)+64<valY+128)return true;
+	}
+}
+
+//рестарт
+function res(){
+	score = 0;
+	for(var key in coin){
+			coin[key].remove();		
+			delete coin[key];		
+	}
+}
+
+//пауза
+function paus(){
+	if(pause){
+		pause=false;
+		document.getElementById('pause').innerHTML = 'Continue(P)';
+	}else{
+		pause=true;
+		document.getElementById('pause').innerHTML = 'Pause(P)';
+	}
+
+}
+
+	</script>
+</body>
+</html>

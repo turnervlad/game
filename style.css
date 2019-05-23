@@ -1,0 +1,25 @@
+body{
+	background-image: url(img/45.jpg);	
+}
+#field{
+	background-image: url(img/3.jpg);
+	border: 1px solid black;
+}
+
+img{
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+input{
+	width:90px;
+	text-align: center;
+}
+#rocket{
+	top:0px;
+	left:0px;
+}
+p{
+	color:white;
+}
